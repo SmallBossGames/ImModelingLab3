@@ -53,6 +53,7 @@ namespace WindowsFormsApp1
             protected bool isStorm = false;
 
             int count;
+            int addCount;
 
             public SimulationDefault()
             {
@@ -61,7 +62,7 @@ namespace WindowsFormsApp1
 
             public virtual int Simulation(double time)
             {
-                Quest[] nextEventArr = { new Quest(AddQueue, addQueueInterval), new Quest(ToWork), new Quest(LetsStorm) };
+                Quest[] nextEventArr = { new Quest(AddQueue, addQueueInterval), new Quest(ToWork), new Quest(LetsStorm, KEK.QStorm(stormMath)) };
 
                 while (timeScale < time)
                 {
@@ -77,20 +78,31 @@ namespace WindowsFormsApp1
             protected bool AddQueue(out double endTime, double timeScale)
             {
                 endTime = timeScale + 17.0;
+                addCount++;
                 shipsQueue.Enqueue(KEK.GenShips());
+                if (dock[0] < 0)
+                {
+                    dock[0] = timeScale + shipsQueue.Dequeue();
+                    Array.Sort(dock);
+                } 
                 return true;
             }
 
             protected virtual bool ToWork(out double endTime, double timeScale)
             {
-                if(!isStorm)
+                if (!isStorm)
                 {
-                    for (int i = 0; i < dock.Length; i++)
+                    for(int i=0; i<dock.Length; i++)
                     {
-                        if (dock[i] > 0)
+                        if(dock[i]>0)
                         {
                             dock[i] = -1.0;
                             count++;
+                            if(shipsQueue.Count != 0)
+                            {
+                                dock[i] = timeScale + shipsQueue.Dequeue();
+                                Array.Sort(dock);
+                            }
                             break;
                         }
                     }
@@ -113,12 +125,12 @@ namespace WindowsFormsApp1
                 if (!isStorm)
                 {
                     isStorm = true;
-                    endTime = timeScale + KEK.QStorm(stormMath);
+                    endTime = timeScale + KEK.GetStorm();
                 }
                 else
                 {
                     isStorm = false;
-                    endTime = timeScale + KEK.GetStorm();
+                    endTime = timeScale + KEK.QStorm(stormMath);
                 }
                 return true;
             }

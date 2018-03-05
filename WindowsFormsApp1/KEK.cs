@@ -10,36 +10,19 @@ namespace WindowsFormsApp1
     {
         public enum ShipType { First, Second, Third }
 
-        public struct Storm
-        {
-            public double time, interval;
-
-            public Storm(double time, double interval)
-            {
-                this.time = time;
-                this.interval = interval;
-            }
-        }
+        static Random random = new Random();
+        static double R => random.NextDouble();
 
         public static double QStorm(double math) // генерация события шторма
         {
-            Random r;
-            double random;
-
-            r = new Random();
-            random = r.NextDouble();
-
-            return -math * Math.Log(random);
+            return -math * Math.Log(R);
         }
 
         public static double GetStorm()
         {
             double plusminus;
-            Random r;
 
-            r = new Random();
-
-            plusminus = r.NextDouble();
+            plusminus = R;
 
             return plusminus * 2 + 4;
         }
@@ -47,9 +30,7 @@ namespace WindowsFormsApp1
 
         public static double GenShips() // генерация корабля происходит каждые 17 часов
         {
-            var random = new Random();
-            var r = random.NextDouble();
-
+            var r = R;
             if (r <= 0.55) return GetLoadTime(ShipType.First);
             if (r > 0.55 & r <= 0.75) return GetLoadTime(ShipType.Second);
             else return GetLoadTime(ShipType.Third);
@@ -57,10 +38,8 @@ namespace WindowsFormsApp1
 
         public static double GetLoadTime(ShipType shipType)
         {
-            double plusminus;
-            var r = new Random();
 
-            plusminus = r.NextDouble();
+            var plusminus = R;
 
             if (shipType == ShipType.First) return plusminus * 2 + 18;
             if (shipType == ShipType.Second) return plusminus * 3 + 24;

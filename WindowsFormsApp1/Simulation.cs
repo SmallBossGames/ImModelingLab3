@@ -59,19 +59,19 @@ namespace WindowsFormsApp1
                 shipsQueue = new Queue<double>();
             }
 
-            public virtual (int count, double workTime) Simulation(double time)
+            public virtual int Simulation(double time)
             {
                 Quest[] nextEventArr = { new Quest(AddQueue, addQueueInterval), new Quest(ToWork), new Quest(LetsStorm) };
 
                 while (timeScale < time)
                 {
                     Array.Sort(nextEventArr);
-                    for (int i = 0; nextEventArr[i].TryMake(ref timeScale); i++)
+                    for (int i = 0; i< nextEventArr.Length; i++)
                     {
-
+                        nextEventArr[i].TryMake(ref timeScale);
                     }
                 }
-                return (count, timeScale);
+                return count;
             }
 
             protected bool AddQueue(out double endTime, double timeScale)
@@ -117,7 +117,7 @@ namespace WindowsFormsApp1
                 }
                 else
                 {
-                    isStorm = true;
+                    isStorm = false;
                     endTime = timeScale + KEK.GetStorm();
                 }
                 return true;

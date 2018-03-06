@@ -15,12 +15,8 @@ namespace WindowsFormsApp1
         static void Main()
         {
             var simulation = new Simulation2();
-            int count = 0;
-            for(int i = 0; i < 10000; i++)
-            {
-                count += simulation.Simulate(8640);
-            }
-            var stat = count / 10000.0;
+            var stat = simulation.Simulate(8640);
+            var time = stat.FullTime / stat.Count;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());

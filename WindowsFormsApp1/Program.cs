@@ -14,14 +14,13 @@ namespace WindowsFormsApp1
         [STAThread]
         static void Main()
         {
-            Simulation.SimulationDefault simulation;
+            var simulation = new Simulation2();
             int count = 0;
             for(int i = 0; i < 10000; i++)
             {
-                simulation = new Simulation.SimulationDefault();
-                count += simulation.Simulation(8640);
+                count += simulation.Simulate(8640);
             }
-            double hui = (float)count / 10000.0;
+            var stat = count / 10000.0;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());

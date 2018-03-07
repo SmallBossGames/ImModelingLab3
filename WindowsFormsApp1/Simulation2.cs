@@ -16,10 +16,8 @@ namespace WindowsFormsApp1
             var storm = new Storm();
             var toWork = new ToWork();
             var statistic = new Statistic();
-            shipQueue.toWork = toWork;
-            toWork.shipQueue = shipQueue;
-            toWork.storm = storm;
-            toWork.statistic = statistic;
+            shipQueue.Init(toWork);
+            toWork.Init(shipQueue, storm, statistic);
             IQuest[] quests = new IQuest[3];
             quests[0] = shipQueue; quests[1] = storm; quests[2] = toWork;
 
@@ -28,8 +26,35 @@ namespace WindowsFormsApp1
                 Array.Sort(quests);
                 for(int i = 0; i<quests.Length; i++)
                 {
-                    if (quests[i].GetTime > timeScale)
-                        timeScale = quests[i].GetTime;
+                    if (quests[i].EndTime > timeScale)
+                        timeScale = quests[i].EndTime;
+                    if (quests[i].TryMake(timeScale)) break;
+                }
+            }
+
+            return statistic;
+        }
+
+        public Statistic SimulateWihFifeShips(double fullTime)
+        {
+            var timeScale = 0.0;
+            var shipQueue = new ShipQueue();
+            var storm = new Storm();
+            var toWork = new ToWork();
+            var fifeShips = new FifeShips();
+            var statistic = new Statistic();
+            shipQueue.Init(toWork);
+            toWork.Init(shipQueue, storm, statistic);
+            IQuest[] quests = new IQuest[3];
+            quests[0] = shipQueue; quests[1] = storm; quests[2] = toWork;
+
+            while (timeScale < fullTime)
+            {
+                Array.Sort(quests);
+                for (int i = 0; i < quests.Length; i++)
+                {
+                    if (quests[i].EndTime > timeScale)
+                        timeScale = quests[i].EndTime;
                     if (quests[i].TryMake(timeScale)) break;
                 }
             }
@@ -37,6 +62,7 @@ namespace WindowsFormsApp1
             return statistic;
         }
     }
+
 
     public class Statistic
     {
@@ -56,13 +82,14 @@ namespace WindowsFormsApp1
         {
             double createTime;
             double inDockTime;
-            public double endingTime=0.0;
+            public double endingTime;
             bool isSpecial;
-            public Ship(double createTime, double inDockTime, bool isSpecial=false)
+            public Ship(double createTime, double inDockTime, bool isSpecial=false, double endingTime=0.0)
             {
                 this.createTime = createTime;
                 this.inDockTime = inDockTime;
                 this.isSpecial = isSpecial;
+                this.endingTime = endingTime;
             }
 
             public double CreateTime => createTime;
@@ -83,7 +110,12 @@ namespace WindowsFormsApp1
         public ToWork toWork;
 
         public Queue<Statistic.Ship> ThisQueue => shipQueue;
-        public double GetTime => endTime;
+        public double EndTime => endTime;
+
+        public void Init(ToWork toWork)
+        {
+            this.toWork = toWork;
+        }
 
         public ShipQueue()
         {
@@ -91,18 +123,20 @@ namespace WindowsFormsApp1
             shipQueue = new Queue<Statistic.Ship>();
         }
 
+        public void AddShip(Statistic.Ship ship, double timeScale)
+        {
+            shipQueue.Enqueue(ship);
+            toWork.PushShip(timeScale);
+        }
+
         public bool TryMake(double timeScale)
         {
             endTime = timeScale + 17.0;
-            shipQueue.Enqueue(new Statistic.Ship(timeScale, KEK.GenShips()));
-            toWork.PushShip(timeScale);
+            AddShip(new Statistic.Ship(timeScale, KEK.GenShips()), timeScale);
             return true;
         }
 
-        public int CompareTo(IQuest other)
-        {
-            return GetTime.CompareTo(other.GetTime);
-        }
+        public int CompareTo(IQuest other) => EndTime.CompareTo(other.EndTime);
     }
 
     class Storm : IQuest
@@ -112,7 +146,7 @@ namespace WindowsFormsApp1
         private double endTime;
         bool isStorm;
 
-        public double GetTime => endTime;
+        public double EndTime => endTime;
 
         public bool IsStorm => isStorm;
 
@@ -123,7 +157,7 @@ namespace WindowsFormsApp1
 
         public int CompareTo(IQuest other)
         {
-            return GetTime.CompareTo(other.GetTime);
+            return EndTime.CompareTo(other.EndTime);
         }
 
         public bool TryMake(double timeScale)
@@ -145,13 +179,20 @@ namespace WindowsFormsApp1
     class ToWork : IQuest
     {
         private double endTime;
-        public double GetTime => endTime;
+        public double EndTime => endTime;
 
         public ShipQueue shipQueue;
         public Storm storm;
         public Statistic statistic;
 
-        private List<Statistic.Ship> dock = new List<Statistic.Ship>(3);
+        public void Init(ShipQueue shipQueue, Storm storm, Statistic statistic)
+        {
+            this.shipQueue = shipQueue;
+            this.storm = storm;
+            this.statistic = statistic;
+        }
+
+        private SortedSet<Statistic.Ship> dock = new SortedSet<Statistic.Ship>();
 
         public bool PushShip(double timeScale)
         {
@@ -161,10 +202,9 @@ namespace WindowsFormsApp1
                 var pool = shipQueue.ThisQueue.Dequeue();
                 pool.endingTime = timeScale + pool.InDockTime;
                 dock.Add(pool);
-                dock.Sort();
 
                 if (dock.Count != 0)
-                    endTime = dock[0].endingTime;
+                    endTime = dock.Min.endingTime;
                 else
                     endTime = -1.0;
                 return true;
@@ -177,30 +217,76 @@ namespace WindowsFormsApp1
             if (storm.IsStorm) return false;
             if (dock.Count == 0) return false;
             statistic.IncCounter();
-            statistic.AddFullTime(timeScale - dock[0].CreateTime);
-            dock.RemoveAt(0);
+            statistic.AddFullTime(timeScale - dock.Min.CreateTime);
+            dock.Remove(dock.Min);
             if (dock.Count != 0)
-                endTime = dock[0].endingTime;
+                endTime = dock.Min.endingTime;
             else
                 endTime = -1.0;
             PushShip(timeScale);
             return false;
         }
 
-        public int CompareTo(IQuest other)
+        public int CompareTo(IQuest other) => EndTime.CompareTo(other.EndTime);
+
+        public bool TryMake(double timeScale) => PopShip(timeScale);
+    }
+
+    class FifeShips:IQuest
+    {
+        const int shipCount = 5;
+        double endTime = 0.0;
+
+        ShipQueue shipQueue;
+        
+        SortedSet<double> nextShipTimes = new SortedSet<double>();
+
+        public FifeShips()
         {
-            return GetTime.CompareTo(other.GetTime);
+            for (int i = 0; i < shipCount; i++)
+                nextShipTimes.Add(0.0);
         }
 
-        public bool TryMake(double timeScale)
+        public void Init(ShipQueue shipQueue)
         {
-            return PopShip(timeScale);
+            this.shipQueue = shipQueue;
         }
+       
+        public bool PushShip(double timeScale)
+        {
+            if (nextShipTimes.Count < shipCount) return false;
+
+            nextShipTimes.Add(timeScale + KEK.GetShipRespawnTime());
+            endTime = nextShipTimes.Min;
+            return true;
+        }
+
+        public bool PopShip(double timeScale)
+        {
+            if (nextShipTimes.Count == 0) return false;
+            var ship = new Statistic.Ship(timeScale, KEK.GetLoadTime(KEK.ShipType.Four), true);
+            shipQueue.AddShip(ship, timeScale);
+
+            nextShipTimes.Remove(nextShipTimes.Min);
+
+            if (nextShipTimes.Count == 0)
+                endTime = double.MaxValue;
+            else
+                endTime = nextShipTimes.Min;
+
+            return true;
+        }
+    
+        public double EndTime => endTime;
+
+        public int CompareTo(IQuest other) => endTime.CompareTo(other.EndTime);
+
+        public bool TryMake(double timeScale) => PopShip(timeScale);
     }
 
     interface IQuest:IComparable<IQuest>
     {
-        double GetTime { get; }
+        double EndTime { get; }
         bool TryMake(double timeScale);
     }
 }

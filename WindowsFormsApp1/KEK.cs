@@ -8,7 +8,7 @@ namespace WindowsFormsApp1
 {
     public class KEK
     {
-        public enum ShipType { First, Second, Third }
+        public enum ShipType { First, Second, Third, Four }
 
         static Random random = new Random();
         static double R => random.NextDouble();
@@ -38,12 +38,23 @@ namespace WindowsFormsApp1
 
         public static double GetLoadTime(ShipType shipType)
         {
-
             var plusminus = R;
-
-            if (shipType == ShipType.First) return plusminus * 2 + 18;
-            if (shipType == ShipType.Second) return plusminus * 3 + 24;
-            else return plusminus * 4 + 35;
+            switch(shipType)
+            {
+                case ShipType.First:
+                    return plusminus * 2 + 18;
+                case ShipType.Second:
+                    return plusminus * 3 + 24;
+                case ShipType.Third:
+                    return plusminus * 4 + 35;
+                case ShipType.Four:
+                    return plusminus * 3 + 21;
+                default:
+                    return 0.0;
+            }
         }
+
+        //Для пяти кораблей
+        public static double GetShipRespawnTime() => R * 24.0 + 240;
     }
 }

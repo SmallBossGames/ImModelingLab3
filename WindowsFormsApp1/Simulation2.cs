@@ -35,7 +35,7 @@ namespace WindowsFormsApp1
             return statistic;
         }
 
-        public Statistic SimulateWihFifeShips(double fullTime)
+        public Statistic SimulateWihFifeShips(double time)
         {
             var timeScale = 0.0;
             var shipQueue = new ShipQueue();
@@ -49,7 +49,7 @@ namespace WindowsFormsApp1
             IQuest[] quests = new IQuest[4];
             quests[0] = shipQueue; quests[1] = storm; quests[2] = toWork; quests[3] = fifeShips;
 
-            while (timeScale < fullTime)
+            while (timeScale < time)
             {
                 Array.Sort(quests);
                 for (int i = 0; i < quests.Length; i++)

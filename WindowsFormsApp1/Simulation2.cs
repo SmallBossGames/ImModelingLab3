@@ -17,7 +17,7 @@ namespace WindowsFormsApp1
             var toWork = new ToWork();
             var statistic = new Statistic();
             shipQueue.Init(toWork);
-            toWork.Init(shipQueue, storm, statistic);
+            toWork.Init(shipQueue, storm, statistic, null);
             IQuest[] quests = new IQuest[3];
             quests[0] = shipQueue; quests[1] = storm; quests[2] = toWork;
 
@@ -44,9 +44,10 @@ namespace WindowsFormsApp1
             var fifeShips = new FifeShips();
             var statistic = new Statistic();
             shipQueue.Init(toWork);
-            toWork.Init(shipQueue, storm, statistic);
-            IQuest[] quests = new IQuest[3];
-            quests[0] = shipQueue; quests[1] = storm; quests[2] = toWork;
+            toWork.Init(shipQueue, storm, statistic, fifeShips);
+            fifeShips.Init(shipQueue);
+            IQuest[] quests = new IQuest[4];
+            quests[0] = shipQueue; quests[1] = storm; quests[2] = toWork; quests[3] = fifeShips;
 
             while (timeScale < fullTime)
             {
@@ -184,12 +185,14 @@ namespace WindowsFormsApp1
         public ShipQueue shipQueue;
         public Storm storm;
         public Statistic statistic;
+        public FifeShips fifeShips;
 
-        public void Init(ShipQueue shipQueue, Storm storm, Statistic statistic)
+        public void Init(ShipQueue shipQueue, Storm storm, Statistic statistic, FifeShips fifeShips)
         {
             this.shipQueue = shipQueue;
             this.storm = storm;
             this.statistic = statistic;
+            this.fifeShips = fifeShips;
         }
 
         private SortedSet<Statistic.Ship> dock = new SortedSet<Statistic.Ship>();
@@ -218,6 +221,12 @@ namespace WindowsFormsApp1
             if (dock.Count == 0) return false;
             statistic.IncCounter();
             statistic.AddFullTime(timeScale - dock.Min.CreateTime);
+            var minDock = dock.Min;
+            if (minDock.IsSpecial)
+            {
+                fifeShips.PushShip(timeScale);
+            }
+                
             dock.Remove(dock.Min);
             if (dock.Count != 0)
                 endTime = dock.Min.endingTime;
@@ -254,7 +263,7 @@ namespace WindowsFormsApp1
        
         public bool PushShip(double timeScale)
         {
-            if (nextShipTimes.Count < shipCount) return false;
+            if (shipCount <= nextShipTimes.Count) return false;
 
             nextShipTimes.Add(timeScale + KEK.GetShipRespawnTime());
             endTime = nextShipTimes.Min;

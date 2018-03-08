@@ -24,7 +24,7 @@ namespace WindowsFormsApp1
 
             plusminus = R;
 
-            return plusminus * 2 + 4;
+            return plusminus * 4 + 2;
         }
 
 
@@ -42,19 +42,19 @@ namespace WindowsFormsApp1
             switch(shipType)
             {
                 case ShipType.First:
-                    return plusminus * 2 + 18;
+                    return plusminus * 4 + 16;
                 case ShipType.Second:
-                    return plusminus * 3 + 24;
+                    return plusminus * 6 + 21;
                 case ShipType.Third:
-                    return plusminus * 4 + 35;
+                    return plusminus * 8 + 31;
                 case ShipType.Four:
-                    return plusminus * 3 + 21;
+                    return plusminus * 6 + 18;
                 default:
                     return 0.0;
             }
         }
 
         //Для пяти кораблей
-        public static double GetShipRespawnTime() => R * 24.0 + 240;
+        public static double GetShipRespawnTime() => (R * 48.0)-24.0 + 240;
     }
 }

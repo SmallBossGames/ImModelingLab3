@@ -16,7 +16,9 @@ namespace WindowsFormsApp1
         {
             var simulation = new Simulation2();
             var stat = simulation.Simulate(8640);
+            var stat2 = simulation.SimulateWihFifeShips(8640);
             var time = stat.FullTime / stat.Count;
+            var time2 = stat2.FullTime / stat.Count;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());

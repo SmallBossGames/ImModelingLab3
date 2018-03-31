@@ -8,7 +8,6 @@ namespace WindowsFormsApp1
 {
     class Simulation2
     {
-
         public Statistic Simulate(double fullTime)
         {
             var timeScale = 0.0;
@@ -16,26 +15,27 @@ namespace WindowsFormsApp1
             var storm = new Storm();
             var toWork = new ToWork();
             var statistic = new Statistic();
+
+            IQuest[] quests = { shipQueue, storm, toWork };
+
             shipQueue.Init(toWork);
             toWork.Init(shipQueue, storm, statistic, null);
-            IQuest[] quests = new IQuest[3];
-            quests[0] = shipQueue; quests[1] = storm; quests[2] = toWork;
 
-            while(timeScale<fullTime)
+            while (timeScale < fullTime)
             {
                 Array.Sort(quests);
-                for(int i = 0; i<quests.Length; i++)
+                for (int i = 0; i < quests.Length; i++)
                 {
                     if (quests[i].EndTime > timeScale)
                         timeScale = quests[i].EndTime;
+
                     if (quests[i].TryMake(timeScale)) break;
                 }
             }
-
             return statistic;
         }
 
-        public Statistic SimulateWihFifeShips(double time)
+        public Statistic SimulateWihFifeShips(double fullTime)
         {
             var timeScale = 0.0;
             var shipQueue = new ShipQueue();
@@ -43,13 +43,14 @@ namespace WindowsFormsApp1
             var toWork = new ToWork();
             var fifeShips = new FifeShips();
             var statistic = new Statistic();
+
+            IQuest[] quests = { shipQueue, storm, toWork, fifeShips };
+
             shipQueue.Init(toWork);
             toWork.Init(shipQueue, storm, statistic, fifeShips);
             fifeShips.Init(shipQueue);
-            IQuest[] quests = new IQuest[4];
-            quests[0] = shipQueue; quests[1] = storm; quests[2] = toWork; quests[3] = fifeShips;
-
-            while (timeScale < time)
+            
+            while (timeScale < fullTime)
             {
                 Array.Sort(quests);
                 for (int i = 0; i < quests.Length; i++)
@@ -59,15 +60,13 @@ namespace WindowsFormsApp1
                     if (quests[i].TryMake(timeScale)) break;
                 }
             }
-
             return statistic;
         }
     }
 
-
     public class Statistic
     {
-        int count=0;
+        int count = 0;
 
         double fullTime = 0.0;
 
@@ -79,13 +78,13 @@ namespace WindowsFormsApp1
 
         public void AddFullTime(double time) => fullTime += time;
 
-        public class Ship: IComparable<Ship>
+        public class Ship : IComparable<Ship>
         {
             double createTime;
             double inDockTime;
             public double endingTime;
             bool isSpecial;
-            public Ship(double createTime, double inDockTime, bool isSpecial=false, double endingTime=0.0)
+            public Ship(double createTime, double inDockTime, bool isSpecial = false, double endingTime = 0.0)
             {
                 this.createTime = createTime;
                 this.inDockTime = inDockTime;
@@ -106,6 +105,7 @@ namespace WindowsFormsApp1
 
     class ShipQueue : IQuest
     {
+        private const double interval = 17.0;
         private double endTime;
         Queue<Statistic.Ship> shipQueue;
         public ToWork toWork;
@@ -120,7 +120,7 @@ namespace WindowsFormsApp1
 
         public ShipQueue()
         {
-            endTime = 17.0;
+            endTime = interval;
             shipQueue = new Queue<Statistic.Ship>();
         }
 
@@ -132,7 +132,7 @@ namespace WindowsFormsApp1
 
         public bool TryMake(double timeScale)
         {
-            endTime = timeScale + 17.0;
+            endTime = timeScale + interval;
             AddShip(new Statistic.Ship(timeScale, KEK.GenShips()), timeScale);
             return true;
         }
@@ -153,7 +153,7 @@ namespace WindowsFormsApp1
 
         public Storm()
         {
-            isStorm = false; 
+            isStorm = false;
         }
 
         public int CompareTo(IQuest other)
@@ -187,6 +187,8 @@ namespace WindowsFormsApp1
         public Statistic statistic;
         public FifeShips fifeShips;
 
+        private List<Statistic.Ship> dock = new List<Statistic.Ship>(3);
+
         public void Init(ShipQueue shipQueue, Storm storm, Statistic statistic, FifeShips fifeShips)
         {
             this.shipQueue = shipQueue;
@@ -195,19 +197,19 @@ namespace WindowsFormsApp1
             this.fifeShips = fifeShips;
         }
 
-        private SortedSet<Statistic.Ship> dock = new SortedSet<Statistic.Ship>();
-
         public bool PushShip(double timeScale)
         {
             if (storm.IsStorm) return false;
-            if (shipQueue.ThisQueue.Count != 0 && dock.Count < 3)
+            if (shipQueue.ThisQueue.Count != 0 && dock.Count <= 3)
             {
                 var pool = shipQueue.ThisQueue.Dequeue();
                 pool.endingTime = timeScale + pool.InDockTime;
+
                 dock.Add(pool);
+                dock.Sort();
 
                 if (dock.Count != 0)
-                    endTime = dock.Min.endingTime;
+                    endTime = dock[0].endingTime;
                 else
                     endTime = -1.0;
                 return true;
@@ -217,19 +219,20 @@ namespace WindowsFormsApp1
 
         public bool PopShip(double timeScale)
         {
-            if (storm.IsStorm) return false;
-            if (dock.Count == 0) return false;
+            if ((storm.IsStorm)||(dock.Count == 0)) return false;
+
             statistic.IncCounter();
-            statistic.AddFullTime(timeScale - dock.Min.CreateTime);
-            var minDock = dock.Min;
-            if (minDock.IsSpecial)
+            statistic.AddFullTime(timeScale - dock[0].CreateTime);
+
+            if (dock[0].IsSpecial)
             {
                 fifeShips.PushShip(timeScale);
             }
-                
-            dock.Remove(dock.Min);
+
+            dock.RemoveAt(0);
+
             if (dock.Count != 0)
-                endTime = dock.Min.endingTime;
+                endTime = dock[0].endingTime;
             else
                 endTime = -1.0;
             PushShip(timeScale);
@@ -241,32 +244,34 @@ namespace WindowsFormsApp1
         public bool TryMake(double timeScale) => PopShip(timeScale);
     }
 
-    class FifeShips:IQuest
+    class FifeShips : IQuest
     {
         const int shipCount = 5;
         double endTime = 0.0;
 
         ShipQueue shipQueue;
-        
-        SortedSet<double> nextShipTimes = new SortedSet<double>();
+
+        List<double> nextShipTimes = new List<double>();
 
         public FifeShips()
         {
             for (int i = 0; i < shipCount; i++)
                 nextShipTimes.Add(0.0);
+
+            nextShipTimes.Sort();
         }
 
         public void Init(ShipQueue shipQueue)
         {
             this.shipQueue = shipQueue;
         }
-       
+
         public bool PushShip(double timeScale)
         {
             if (shipCount <= nextShipTimes.Count) return false;
 
             nextShipTimes.Add(timeScale + KEK.GetShipRespawnTime());
-            endTime = nextShipTimes.Min;
+            endTime = nextShipTimes[0];
             return true;
         }
 
@@ -276,16 +281,16 @@ namespace WindowsFormsApp1
             var ship = new Statistic.Ship(timeScale, KEK.GetLoadTime(KEK.ShipType.Four), true);
             shipQueue.AddShip(ship, timeScale);
 
-            nextShipTimes.Remove(nextShipTimes.Min);
+            nextShipTimes.RemoveAt(0);
 
             if (nextShipTimes.Count == 0)
                 endTime = double.MaxValue;
             else
-                endTime = nextShipTimes.Min;
+                endTime = nextShipTimes[0];
 
             return true;
         }
-    
+
         public double EndTime => endTime;
 
         public int CompareTo(IQuest other) => endTime.CompareTo(other.EndTime);
@@ -293,7 +298,7 @@ namespace WindowsFormsApp1
         public bool TryMake(double timeScale) => PopShip(timeScale);
     }
 
-    interface IQuest:IComparable<IQuest>
+    interface IQuest : IComparable<IQuest>
     {
         double EndTime { get; }
         bool TryMake(double timeScale);

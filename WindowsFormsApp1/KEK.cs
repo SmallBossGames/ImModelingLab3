@@ -31,8 +31,8 @@ namespace WindowsFormsApp1
         public static double GenShips() // генерация корабля происходит каждые 17 часов
         {
             var r = R;
-            if (r <= 0.55) return GetLoadTime(ShipType.First);
-            if (r > 0.55 & r <= 0.75) return GetLoadTime(ShipType.Second);
+            if (r <= 0.25) return GetLoadTime(ShipType.First);
+            if (r > 0.25 & r <= 0.8) return GetLoadTime(ShipType.Second);
             else return GetLoadTime(ShipType.Third);
         }
 
@@ -55,6 +55,6 @@ namespace WindowsFormsApp1
         }
 
         //Для пяти кораблей
-        public static double GetShipRespawnTime() => (R * 48.0)-24.0 + 240;
+        public static double GetShipRespawnTime() => (R * 48.0) - 24.0 + 240;
     }
 }

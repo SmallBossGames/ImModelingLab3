@@ -11,7 +11,7 @@ namespace WindowsFormsApp1
         public enum ShipType { First, Second, Third, Four }
 
         static Random random = new Random();
-        static double R => random.NextDouble();
+        static double R => (double)random.Next(int.MaxValue)/int.MaxValue;
 
         public static double QStorm(double math) // генерация события шторма
         {

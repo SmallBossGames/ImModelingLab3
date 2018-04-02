@@ -154,6 +154,7 @@ namespace WindowsFormsApp1
         public Storm()
         {
             isStorm = false;
+            endTime = KEK.GetStorm();
         }
 
         public int CompareTo(IQuest other)

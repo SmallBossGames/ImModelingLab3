@@ -41,14 +41,12 @@ namespace WindowsFormsApp1
             {
                 var simulation2 = new Simulation2();
                 var statistic = getStat(simulationTime);
-                time += statistic.FullTime / (statistic.Count);
+                time += statistic.FullTime / (statistic.Count * itCount);
                 shipsCount += statistic.Count;
             }
-
-            time /= itCount;
             shipsCount /= itCount;
 
-            ShipTimeTextBox.Text = Math.Round(time, 3).ToString();
+            ShipTimeTextBox.Text = Math.Round(time, 1).ToString();
             shipsTextBox.Text = shipsCount.ToString();
         }
     }

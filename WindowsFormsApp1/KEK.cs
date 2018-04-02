@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WindowsFormsApp1
 {
-    public class KEK
+    public static class KEK
     {
         public enum ShipType { First, Second, Third, Four }
 

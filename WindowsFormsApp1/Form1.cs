@@ -34,18 +34,22 @@ namespace WindowsFormsApp1
         {
             const int itCount = 500;
             double time = 0.0;
-            double shipsCount = 0;
+            int shipsCount = 0;
             var simulationTime = Convert.ToDouble(timeTextBox.Text);
+
             for (var i = 0; i < itCount; i++)
             {
                 var simulation2 = new Simulation2();
                 var statistic = getStat(simulationTime);
-                time += statistic.FullTime / (statistic.Count * itCount);
+                time += statistic.FullTime / (statistic.Count);
                 shipsCount += statistic.Count;
             }
+
+            time /= itCount;
             shipsCount /= itCount;
+
             ShipTimeTextBox.Text = Math.Round(time, 3).ToString();
-            shipsTextBox.Text = (Math.Floor(shipsCount)).ToString();
+            shipsTextBox.Text = shipsCount.ToString();
         }
     }
 }

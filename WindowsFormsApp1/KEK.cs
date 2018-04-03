@@ -39,15 +39,25 @@ namespace WindowsFormsApp1
         public static double GetLoadTime(ShipType shipType)
         {
             var plusminus = R;
+
+            int count1 = 0;
+            int count2 = 0;
+            int count3 = 0;
+            int count4 = 0;
+
             switch(shipType)
             {
                 case ShipType.First:
+                    count1++;
                     return plusminus * 4 + 16;
                 case ShipType.Second:
+                    count2++;
                     return plusminus * 6 + 21;
                 case ShipType.Third:
+                    count3++;
                     return plusminus * 8 + 31;
                 case ShipType.Four:
+                    count4++;
                     return plusminus * 6 + 18;
                 default:
                     return 0.0;

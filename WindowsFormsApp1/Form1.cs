@@ -49,7 +49,7 @@ namespace WindowsFormsApp1
             int shipsCount = 0;
             var simulationTime = Convert.ToDouble(timeTextBox.Text);
 
-            for (var i = 0; i < itCount; i++)
+            for (var i = 0; i < itCount; i++) // расчёт числа реализаций
             {
                 var statistic = getStat(simulationTime);
                 var thisMathTime = statistic.FullTime / statistic.Count;

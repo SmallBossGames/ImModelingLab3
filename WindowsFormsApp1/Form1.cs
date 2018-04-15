@@ -34,13 +34,16 @@ namespace WindowsFormsApp1
 
         void WriteData(GetStat getStat)
         {
+            const int itCount = 50;
+
             double kvantil = Convert.ToDouble(kvantilTextBox.Text);
             double accuracy = Convert.ToDouble(accuracyTextBox.Text) / 100;
             double dispercion = 0;
-            const int itCount = 50;
+
+            double[] times = new double[itCount];
+
+            
             double itCountFinal = 0;
-            double xI = 0;
-            double[] arrayOfTime = new double[itCount];
 
             double time = 0.0;
             int shipsCount = 0;
@@ -48,39 +51,38 @@ namespace WindowsFormsApp1
 
             for (var i = 0; i < itCount; i++)
             {
-                var simulation2 = new Simulation2();
                 var statistic = getStat(simulationTime);
-                time += statistic.FullTime / (statistic.Count * itCount);
-                shipsCount += statistic.Count;
-                arrayOfTime[i] = statistic.Count;
-                //dispercion += (statistic.FullTime / statistic.Count) * (statistic.FullTime / statistic.Count);
-                //xI += statistic.FullTime / statistic.Count;
+                var thisMathTime = statistic.FullTime / statistic.Count;
+                //Добавляем в список
+                times[i] = thisMathTime;
+                //Считаем матожидание
+                time += thisMathTime / itCount;
             }
 
-
-            for (var i = 0; i < itCount; i++)
+            for (int i = 0; i < itCount; i++)
             {
-                dispercion += (1 / (double)itCount) * (arrayOfTime[i] - time) * (arrayOfTime[i] - time);
+                dispercion += (times[i] * times[i] - time * time);
+            }
+
+            dispercion /= itCount-1;
+
+            itCountFinal = Math.Ceiling(dispercion * dispercion * kvantil * kvantil / (accuracy * accuracy));
+
+            KEK.count1 = KEK.count2 = KEK.count3 = KEK.count4 = 0;
+
+            time = 0;
+            shipsCount = 0;
+            for (var i = 0; i < itCountFinal; i++)
+            {
+                var statistic = getStat(simulationTime);
+                var thisMathTime = statistic.FullTime / statistic.Count;
+                time += thisMathTime / itCountFinal;
+                shipsCount += statistic.Count;
             }
 
             shipsCount /= itCount;
 
-            itCountFinal = (dispercion * kvantil * kvantil / (accuracy * accuracy));
-
-            time = 0.0;
-            shipsCount = 0;
-
-            for (var i = 0; i < 186000; i++)
-            {
-                var simulation2 = new Simulation2();
-                var statistic = getStat(simulationTime);
-                time += statistic.FullTime / (statistic.Count * itCount);
-                shipsCount += statistic.Count;
-            }
-
-            shipsCount /= (int)itCountFinal;
-
-            ShipTimeTextBox.Text = Math.Round(time, 1).ToString();
+            ShipTimeTextBox.Text = Math.Round(time, 2).ToString();
             shipsTextBox.Text = shipsCount.ToString();
             ITTextBox.Text = itCountFinal.ToString();
             textBox1.Text = (KEK.count1 / itCount).ToString();

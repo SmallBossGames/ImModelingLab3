@@ -11,7 +11,13 @@ namespace WindowsFormsApp1
         public enum ShipType { First, Second, Third, Four }
 
         static Random random = new Random();
-        static double R => (double)random.Next(int.MaxValue)/int.MaxValue;
+
+        public static int count1 = 0;
+        public static int count2 = 0;
+        public static int count3 = 0;
+        public static int count4 = 0;
+
+        static double R => (double)random.Next(int.MaxValue) / int.MaxValue;
 
         public static double QStorm(double math) // генерация события шторма
         {
@@ -40,12 +46,7 @@ namespace WindowsFormsApp1
         {
             var plusminus = R;
 
-            int count1 = 0;
-            int count2 = 0;
-            int count3 = 0;
-            int count4 = 0;
-
-            switch(shipType)
+            switch (shipType)
             {
                 case ShipType.First:
                     count1++;

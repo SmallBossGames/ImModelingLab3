@@ -84,6 +84,7 @@ namespace WindowsFormsApp1
             double inDockTime;
             public double endingTime;
             bool isSpecial;
+
             public Ship(double createTime, double inDockTime, bool isSpecial = false, double endingTime = 0.0)
             {
                 this.createTime = createTime;

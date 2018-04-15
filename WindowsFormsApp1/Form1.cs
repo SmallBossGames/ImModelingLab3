@@ -42,7 +42,6 @@ namespace WindowsFormsApp1
 
             double[] times = new double[itCount];
 
-            
             double itCountFinal = 0;
 
             double time = 0.0;
@@ -64,7 +63,7 @@ namespace WindowsFormsApp1
                 dispercion += (times[i] * times[i] - time * time);
             }
 
-            dispercion /= itCount-1;
+            dispercion /= itCount - 1;
 
             itCountFinal = Math.Ceiling(dispercion * dispercion * kvantil * kvantil / (accuracy * accuracy));
 
@@ -72,6 +71,7 @@ namespace WindowsFormsApp1
 
             time = 0;
             shipsCount = 0;
+
             for (var i = 0; i < itCountFinal; i++)
             {
                 var statistic = getStat(simulationTime);
@@ -80,15 +80,15 @@ namespace WindowsFormsApp1
                 shipsCount += statistic.Count;
             }
 
-            shipsCount /= itCount;
+            shipsCount /= (int)itCountFinal;
 
             ShipTimeTextBox.Text = Math.Round(time, 2).ToString();
             shipsTextBox.Text = shipsCount.ToString();
             ITTextBox.Text = itCountFinal.ToString();
-            textBox1.Text = (KEK.count1 / itCount).ToString();
-            textBox2.Text = (KEK.count2 / itCount).ToString();
-            textBox3.Text = (KEK.count3 / itCount).ToString();
-            textBox4.Text = (KEK.count4 / itCount).ToString();
+            textBox1.Text = Math.Round((KEK.count1 / itCountFinal)).ToString();
+            textBox2.Text = Math.Round((KEK.count2 / itCountFinal)).ToString();
+            textBox3.Text = Math.Round((KEK.count3 / itCountFinal)).ToString();
+            textBox4.Text = Math.Round((KEK.count4 / itCountFinal)).ToString();
         }
 
         private void label5_Click(object sender, EventArgs e)

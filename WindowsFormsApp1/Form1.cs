@@ -13,7 +13,6 @@ namespace WindowsFormsApp1
     public partial class Form1 : Form
     {
         delegate Statistic GetStat(double time);
-
         public Form1()
         {
             InitializeComponent();
@@ -35,33 +34,55 @@ namespace WindowsFormsApp1
 
         void WriteData(GetStat getStat)
         {
+            const int itCount = 50;
+
             double kvantil = Convert.ToDouble(kvantilTextBox.Text);
             double accuracy = Convert.ToDouble(accuracyTextBox.Text) / 100;
+            double dispercion = 0;
 
-            double dispercion1 = 0;
-            double dispersion2 = 0;
-            double dispersion3 = 0;
-            double dispersion4 = 0;
+            double[] times = new double[itCount];
 
-            const int itCount = 50;
+            
             double itCountFinal = 0;
-            double[] arrayOfTime = new double[itCount];
 
             double time = 0.0;
             int shipsCount = 0;
             var simulationTime = Convert.ToDouble(timeTextBox.Text);
 
-            for (var i = 0; i < itCount; i++) // симуляция для расчёта числа симуляций
+            for (var i = 0; i < itCount; i++)
             {
                 var statistic = getStat(simulationTime);
-                time += statistic.FullTime / (statistic.Count * itCount);
+                var thisMathTime = statistic.FullTime / statistic.Count;
+                //Добавляем в список
+                times[i] = thisMathTime;
+                //Считаем матожидание
+                time += thisMathTime / itCount;
+            }
+
+            for (int i = 0; i < itCount; i++)
+            {
+                dispercion += (times[i] * times[i] - time * time);
+            }
+
+            dispercion /= itCount-1;
+
+            itCountFinal = Math.Ceiling(dispercion * dispercion * kvantil * kvantil / (accuracy * accuracy));
+
+            KEK.count1 = KEK.count2 = KEK.count3 = KEK.count4 = 0;
+
+            time = 0;
+            shipsCount = 0;
+            for (var i = 0; i < itCountFinal; i++)
+            {
+                var statistic = getStat(simulationTime);
+                var thisMathTime = statistic.FullTime / statistic.Count;
+                time += thisMathTime / itCountFinal;
                 shipsCount += statistic.Count;
-                arrayOfTime[i] = statistic.Count;
             }
 
             shipsCount /= itCount;
 
-            ShipTimeTextBox.Text = Math.Round(time, 1).ToString();
+            ShipTimeTextBox.Text = Math.Round(time, 2).ToString();
             shipsTextBox.Text = shipsCount.ToString();
             ITTextBox.Text = itCountFinal.ToString();
             textBox1.Text = (KEK.count1 / itCount).ToString();

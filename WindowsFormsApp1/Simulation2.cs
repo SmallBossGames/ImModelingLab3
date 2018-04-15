@@ -281,6 +281,7 @@ namespace WindowsFormsApp1
         {
             if (nextShipTimes.Count == 0) return false;
             var ship = new Statistic.Ship(timeScale, KEK.GetLoadTime(KEK.ShipType.Four), true);
+            
             shipQueue.AddShip(ship, timeScale);
 
             nextShipTimes.RemoveAt(0);

@@ -17,6 +17,16 @@ namespace WindowsFormsApp1
         public static int count3 = 0;
         public static int count4 = 0;
 
+        public static double[] array1 = new double[100];
+        public static double[] array2 = new double[100];
+        public static double[] array3 = new double[100];
+        public static double[] array4 = new double[100];
+
+        static int i = 0;
+        static int j = 0;
+        static int o = 0;
+        static int p = 0;
+
         static double R => (double)random.Next(int.MaxValue) / int.MaxValue;
 
         public static double QStorm(double math) // генерация события шторма
@@ -33,7 +43,6 @@ namespace WindowsFormsApp1
             return plusminus * 4 + 2;
         }
 
-
         public static double GenShips() // генерация корабля происходит каждые 17 часов
         {
             var r = R;
@@ -49,17 +58,17 @@ namespace WindowsFormsApp1
             switch (shipType)
             {
                 case ShipType.First:
-                    count1++;
-                    return plusminus * 4 + 16;
+                    count1++; array1[i] = plusminus * 4 + 16; i++;
+                    return array1[i - 1];//return plusminus * 4 + 16;
                 case ShipType.Second:
-                    count2++;
-                    return plusminus * 6 + 21;
+                    count2++; array2[j] = plusminus * 6 + 21; j++;
+                    return array2[j - 1];//return plusminus * 6 + 21;
                 case ShipType.Third:
-                    count3++;
-                    return plusminus * 8 + 31;
+                    count3++; array3[o] = plusminus * 8 + 31; o++;
+                    return array3[o - 1];//return plusminus * 8 + 31;
                 case ShipType.Four:
-                    count4++;
-                    return plusminus * 6 + 18;
+                    count4++; array4[p] = plusminus * 6 + 18; p++;
+                    return array4[p - 1];//return plusminus * 6 + 18;
                 default:
                     return 0.0;
             }

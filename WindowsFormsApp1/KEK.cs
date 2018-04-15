@@ -59,16 +59,16 @@ namespace WindowsFormsApp1
             {
                 case ShipType.First:
                     count1++; array1[i] = plusminus * 4 + 16; i++;
-                    return array1[i - 1];//return plusminus * 4 + 16;
+                    return plusminus * 4 + 16;
                 case ShipType.Second:
                     count2++; array2[j] = plusminus * 6 + 21; j++;
-                    return array2[j - 1];//return plusminus * 6 + 21;
+                    return plusminus * 6 + 21;
                 case ShipType.Third:
                     count3++; array3[o] = plusminus * 8 + 31; o++;
-                    return array3[o - 1];//return plusminus * 8 + 31;
+                    return plusminus * 8 + 31;
                 case ShipType.Four:
                     count4++; array4[p] = plusminus * 6 + 18; p++;
-                    return array4[p - 1];//return plusminus * 6 + 18;
+                    return plusminus * 6 + 18;
                 default:
                     return 0.0;
             }

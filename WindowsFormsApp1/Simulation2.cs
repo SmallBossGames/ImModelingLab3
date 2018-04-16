@@ -66,40 +66,52 @@ namespace WindowsFormsApp1
 
     public class Statistic
     {
-        int count = 0;
+        const int typeCount = 4;
 
+        int count = 0;
         double fullTime = 0.0;
+        double[] inDockTimes = new double[typeCount];
 
         public int Count => count;
+        //public double FullTime => fullTime;
+        public double MiddleFullTime => fullTime / count;
+        public double MiddleInQueueTime => throw new Exception();
 
-        public double FullTime => fullTime;
 
         public void IncCounter() => count++;
-
         public void AddFullTime(double time) => fullTime += time;
+        public void AddInDockTime(double time, int index) => inDockTimes[index] += time;
+        public double GetInDockTime(int index) => inDockTimes[index];
+
+        public Statistic()
+        {
+            for (int i = 0; i < inDockTimes.Length; i++)
+            {
+                inDockTimes[i] = 0.0;
+            }
+        }
 
         public class Ship : IComparable<Ship>
         {
             double createTime;
             double inDockTime;
-            public double endingTime;
-            bool isSpecial;
+            byte type;
 
-            public Ship(double createTime, double inDockTime, bool isSpecial = false, double endingTime = 0.0)
+            public Ship(double createTime, byte type)
             {
                 this.createTime = createTime;
-                this.inDockTime = inDockTime;
-                this.isSpecial = isSpecial;
-                this.endingTime = endingTime;
+                this.type = type;
+                inDockTime = KEK.GetLoadTime(type);
             }
 
             public double CreateTime => createTime;
             public double InDockTime => inDockTime;
-            public bool IsSpecial => isSpecial;
+            public byte Type => type;
+            public double EndingTime { get; set; }
 
             public int CompareTo(Ship other)
             {
-                return endingTime.CompareTo(other.endingTime);
+                return EndingTime.CompareTo(other.EndingTime);
             }
         }
     }
@@ -205,13 +217,13 @@ namespace WindowsFormsApp1
             if (shipQueue.ThisQueue.Count != 0 && dock.Count <= 3)
             {
                 var pool = shipQueue.ThisQueue.Dequeue();
-                pool.endingTime = timeScale + pool.InDockTime;
+                pool.EndingTime = timeScale + pool.InDockTime;
 
                 dock.Add(pool);
                 dock.Sort();
 
                 if (dock.Count != 0)
-                    endTime = dock[0].endingTime;
+                    endTime = dock[0].EndingTime;
                 else
                     endTime = -1.0;
                 return true;
@@ -226,7 +238,7 @@ namespace WindowsFormsApp1
             statistic.IncCounter();
             statistic.AddFullTime(timeScale - dock[0].CreateTime);
 
-            if (dock[0].IsSpecial)
+            if (dock[0].Type==3)
             {
                 fifeShips.PushShip(timeScale);
             }
@@ -234,7 +246,7 @@ namespace WindowsFormsApp1
             dock.RemoveAt(0);
 
             if (dock.Count != 0)
-                endTime = dock[0].endingTime;
+                endTime = dock[0].EndingTime;
             else
                 endTime = -1.0;
             PushShip(timeScale);
@@ -280,7 +292,7 @@ namespace WindowsFormsApp1
         public bool PopShip(double timeScale)
         {
             if (nextShipTimes.Count == 0) return false;
-            var ship = new Statistic.Ship(timeScale, KEK.GetLoadTime(KEK.ShipType.Four), true);
+            var ship = new Statistic.Ship(timeScale, 3);
             
             shipQueue.AddShip(ship, timeScale);
 

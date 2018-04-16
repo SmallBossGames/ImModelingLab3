@@ -51,7 +51,7 @@ namespace WindowsFormsApp1
             for (var i = 0; i < itCount; i++) // расчёт числа реализаций
             {
                 var statistic = getStat(simulationTime);
-                var thisMathTime = statistic.FullTime / statistic.Count;
+                var thisMathTime = statistic.MiddleFullTime;
                 //Добавляем в список
                 times[i] = thisMathTime;
                 //Считаем матожидание
@@ -75,7 +75,7 @@ namespace WindowsFormsApp1
             for (var i = 0; i < itCountFinal; i++)
             {
                 var statistic = getStat(simulationTime);
-                var thisMathTime = statistic.FullTime / statistic.Count;
+                var thisMathTime = statistic.MiddleFullTime;
                 time += thisMathTime / itCountFinal;
                 shipsCount += statistic.Count;
             }

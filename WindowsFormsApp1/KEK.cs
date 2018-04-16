@@ -8,7 +8,7 @@ namespace WindowsFormsApp1
 {
     public static class KEK
     {
-        public enum ShipType { First, Second, Third, Four }
+        //public enum ShipType { First, Second, Third, Four }
 
         static Random random = new Random();
 
@@ -33,34 +33,38 @@ namespace WindowsFormsApp1
             return plusminus * 4 + 2;
         }
 
-        public static double GenShips() // генерация корабля происходит каждые 17 часов
+        public static byte GenShips() // генерация корабля происходит каждые 17 часов
         {
             var r = R;
-            if (r <= 0.25) return GetLoadTime(ShipType.First);
-            if (r > 0.25 & r <= 0.8) return GetLoadTime(ShipType.Second);
-            else return GetLoadTime(ShipType.Third);
+
+            if (r <= 0.25)
+                return 0;
+            else if (r > 0.25 & r <= 0.8)
+                return 1;
+            else
+                return 2;
         }
 
-        public static double GetLoadTime(ShipType shipType)
+        public static double GetLoadTime(byte typeNumber)
         {
             var plusminus = R;
 
-            switch (shipType)
+            switch (typeNumber)
             {
-                case ShipType.First:
+                case 0:
                     count1++;
                     return plusminus * 4 + 16;
-                case ShipType.Second:
+                case 1:
                     count2++;
                     return plusminus * 6 + 21;
-                case ShipType.Third:
+                case 2:
                     count3++;
                     return plusminus * 8 + 31;
-                case ShipType.Four:
+                case 3:
                     count4++;
                     return plusminus * 6 + 18;
                 default:
-                    return 0.0;
+                    throw new Exception("Wrong number");
             }
         }
 

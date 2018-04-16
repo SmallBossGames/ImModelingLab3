@@ -13,6 +13,7 @@ namespace WindowsFormsApp1
     public partial class Form1 : Form
     {
         delegate Statistic GetStat(double time);
+
         public Form1()
         {
             InitializeComponent();
@@ -51,11 +52,13 @@ namespace WindowsFormsApp1
             for (var i = 0; i < itCount; i++) // расчёт числа реализаций
             {
                 var statistic = getStat(simulationTime);
-                var thisMathTime = statistic.MiddleFullTime;
+                //var thisMathTime = statistic.MiddleFullTime;
+                var thisMathTime = statistic.GetFullMiddleShipTime(Convert.ToInt32(ShipTypeTextBox.Text)) / statistic.GetShipCount(Convert.ToInt32(ShipTypeTextBox.Text));
                 //Добавляем в список
                 times[i] = thisMathTime;
                 //Считаем матожидание
                 time += thisMathTime / itCount;
+                //time += statistic.GetFullMiddleShipTime(Convert.ToInt32(ShipTypeTextBox.Text)) / statistic.GetShipCount(Convert.ToInt32(ShipTypeTextBox.Text));
             }
 
             for (int i = 0; i < itCount; i++)
@@ -71,6 +74,7 @@ namespace WindowsFormsApp1
 
             time = 0;
             shipsCount = 0;
+            double queueTime = 0;
 
             for (var i = 0; i < itCountFinal; i++)
             {
@@ -78,6 +82,7 @@ namespace WindowsFormsApp1
                 var thisMathTime = statistic.MiddleFullTime;
                 time += thisMathTime / itCountFinal;
                 shipsCount += statistic.Count;
+                queueTime += statistic.GetWaitingMiddleShipTime(Convert.ToInt32(ShipTypeTextBox.Text)) / shipsCount;
             }
 
             shipsCount /= (int)itCountFinal;
@@ -89,6 +94,7 @@ namespace WindowsFormsApp1
             textBox2.Text = Math.Round((KEK.count2 / itCountFinal)).ToString();
             textBox3.Text = Math.Round((KEK.count3 / itCountFinal)).ToString();
             textBox4.Text = Math.Round((KEK.count4 / itCountFinal)).ToString();
+            QueveTextBox.Text = Math.Round(queueTime, 2).ToString();
         }
 
         private void label5_Click(object sender, EventArgs e)

@@ -14,7 +14,7 @@ namespace WindowsFormsApp1
             var shipQueue = new ShipQueue();
             var storm = new Storm();
             var toWork = new ToWork();
-            var statistic = new Statistic();
+            var statistic = new Statistic(3);
 
             IQuest[] quests = { shipQueue, storm, toWork };
 
@@ -42,7 +42,7 @@ namespace WindowsFormsApp1
             var storm = new Storm();
             var toWork = new ToWork();
             var fifeShips = new FifeShips();
-            var statistic = new Statistic();
+            var statistic = new Statistic(4);
 
             IQuest[] quests = { shipQueue, storm, toWork, fifeShips };
 
@@ -66,28 +66,45 @@ namespace WindowsFormsApp1
 
     public class Statistic
     {
-        const int typeCount = 4;
+        readonly int typeCount;
 
         int count = 0;
         double fullTime = 0.0;
-        double[] inDockTimes = new double[typeCount];
+        double[] inDockTimes;
+        double[] fullTimes;
+        int[] counts;
 
         public int Count => count;
         //public double FullTime => fullTime;
         public double MiddleFullTime => fullTime / count;
         public double MiddleInQueueTime => throw new Exception();
 
-
         public void IncCounter() => count++;
         public void AddFullTime(double time) => fullTime += time;
-        public void AddInDockTime(double time, int index) => inDockTimes[index] += time;
-        public double GetInDockTime(int index) => inDockTimes[index];
 
-        public Statistic()
+        public void AddShipData(double timeScale, Ship ship)
         {
-            for (int i = 0; i < inDockTimes.Length; i++)
+            inDockTimes[ship.Type] += ship.InDockTime;
+            fullTimes[ship.Type] += timeScale - ship.CreateTime;
+            counts[ship.Type]++;
+        }
+
+        public double GetInDockMiddleShipTime(int index) => inDockTimes[index] / counts[index];
+        public double GetWaitingMiddleShipTime(int index)  => (fullTimes[index] - inDockTimes[index]) / counts[index];
+        public double GetFullMiddleShipTime(int index) => fullTimes[index];
+        public int GetShipCount(int index) => counts[index];
+
+        public Statistic(int typeCount)
+        {
+            this.typeCount = typeCount;
+            inDockTimes = new double[typeCount];
+            counts = new int[typeCount];
+            fullTimes = new double[typeCount];
+            for (int i = 0; i < typeCount; i++)
             {
                 inDockTimes[i] = 0.0;
+                fullTimes[i] = 0.0;
+                counts[i] = 0;
             }
         }
 
@@ -237,6 +254,8 @@ namespace WindowsFormsApp1
 
             statistic.IncCounter();
             statistic.AddFullTime(timeScale - dock[0].CreateTime);
+
+            statistic.AddShipData(timeScale, dock[0]);
 
             if (dock[0].Type==3)
             {

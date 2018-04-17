@@ -50,11 +50,15 @@
             this.kvantilTextBox = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.ITTextBox = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.ShipTypeTextBox = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.QueveTextBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // mainButton
             // 
-            this.mainButton.Location = new System.Drawing.Point(15, 201);
+            this.mainButton.Location = new System.Drawing.Point(12, 232);
             this.mainButton.Name = "mainButton";
             this.mainButton.Size = new System.Drawing.Size(164, 92);
             this.mainButton.TabIndex = 0;
@@ -114,7 +118,7 @@
             // 
             // fiveShipsButton
             // 
-            this.fiveShipsButton.Location = new System.Drawing.Point(185, 201);
+            this.fiveShipsButton.Location = new System.Drawing.Point(185, 232);
             this.fiveShipsButton.Name = "fiveShipsButton";
             this.fiveShipsButton.Size = new System.Drawing.Size(168, 92);
             this.fiveShipsButton.TabIndex = 7;
@@ -226,7 +230,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(185, 120);
+            this.label10.Location = new System.Drawing.Point(12, 203);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(92, 13);
             this.label10.TabIndex = 20;
@@ -234,17 +238,54 @@
             // 
             // ITTextBox
             // 
-            this.ITTextBox.Location = new System.Drawing.Point(284, 117);
+            this.ITTextBox.Location = new System.Drawing.Point(111, 200);
             this.ITTextBox.Name = "ITTextBox";
             this.ITTextBox.ReadOnly = true;
             this.ITTextBox.Size = new System.Drawing.Size(100, 20);
             this.ITTextBox.TabIndex = 21;
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(182, 120);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(120, 13);
+            this.label11.TabIndex = 22;
+            this.label11.Text = "Введите тип корабля: ";
+            // 
+            // ShipTypeTextBox
+            // 
+            this.ShipTypeTextBox.Location = new System.Drawing.Point(308, 118);
+            this.ShipTypeTextBox.Name = "ShipTypeTextBox";
+            this.ShipTypeTextBox.Size = new System.Drawing.Size(100, 20);
+            this.ShipTypeTextBox.TabIndex = 23;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(244, 203);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(144, 13);
+            this.label12.TabIndex = 24;
+            this.label12.Text = "Среднее время в очереди: ";
+            // 
+            // QueveTextBox
+            // 
+            this.QueveTextBox.Location = new System.Drawing.Point(394, 201);
+            this.QueveTextBox.Name = "QueveTextBox";
+            this.QueveTextBox.ReadOnly = true;
+            this.QueveTextBox.Size = new System.Drawing.Size(100, 20);
+            this.QueveTextBox.TabIndex = 25;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(419, 301);
+            this.ClientSize = new System.Drawing.Size(509, 336);
+            this.Controls.Add(this.QueveTextBox);
+            this.Controls.Add(this.label12);
+            this.Controls.Add(this.ShipTypeTextBox);
+            this.Controls.Add(this.label11);
             this.Controls.Add(this.ITTextBox);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.kvantilTextBox);
@@ -298,6 +339,10 @@
         private System.Windows.Forms.TextBox kvantilTextBox;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox ITTextBox;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox ShipTypeTextBox;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox QueveTextBox;
     }
 }
 

@@ -77,7 +77,6 @@ namespace WindowsFormsApp1
         public int Count => count;
         //public double FullTime => fullTime;
         public double MiddleFullTime => fullTime / count;
-        public double MiddleInQueueTime => throw new Exception();
 
         public void IncCounter() => count++;
         public void AddFullTime(double time) => fullTime += time;

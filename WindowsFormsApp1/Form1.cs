@@ -39,6 +39,7 @@ namespace WindowsFormsApp1
 
             double kvantil = Convert.ToDouble(kvantilTextBox.Text);
             double accuracy = Convert.ToDouble(accuracyTextBox.Text) / 100;
+            int index = Convert.ToInt32(ShipTypeTextBox.Text);
             double dispercion = 0;
 
             double[] times = new double[itCount];
@@ -53,7 +54,7 @@ namespace WindowsFormsApp1
             {
                 var statistic = getStat(simulationTime);
                 //var thisMathTime = statistic.MiddleFullTime;
-                var thisMathTime = statistic.GetFullMiddleShipTime(Convert.ToInt32(ShipTypeTextBox.Text)) / statistic.GetShipCount(Convert.ToInt32(ShipTypeTextBox.Text));
+                var thisMathTime = statistic.GetInDockMiddleShipTime(index);
                 //Добавляем в список
                 times[i] = thisMathTime;
                 //Считаем матожидание
@@ -82,7 +83,7 @@ namespace WindowsFormsApp1
                 var thisMathTime = statistic.MiddleFullTime;
                 time += thisMathTime / itCountFinal;
                 shipsCount += statistic.Count;
-                queueTime += statistic.GetWaitingMiddleShipTime(Convert.ToInt32(ShipTypeTextBox.Text)) / shipsCount;
+                queueTime += statistic.GetWaitingMiddleShipTime(index) / shipsCount;
             }
 
             shipsCount /= (int)itCountFinal;

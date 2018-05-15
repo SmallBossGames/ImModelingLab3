@@ -23,14 +23,27 @@ namespace WindowsFormsApp1
         {
             KEK.count1 = KEK.count2 = KEK.count3 = KEK.count4 = 0;
             var simulation2 = new Simulation2();
-            WriteData(simulation2.Simulate);
+            try
+            {
+                WriteData(simulation2.Simulate);
+            } catch
+            {
+                MessageBox.Show("Некорректные данные");
+            }
         }
 
         private void fiveShipsButton_Click(object sender, EventArgs e)
         {
             KEK.count1 = KEK.count2 = KEK.count3 = KEK.count4 = 0;
             var simulation2 = new Simulation2();
-            WriteData(simulation2.SimulateWihFifeShips);
+            try
+            {
+                WriteData(simulation2.SimulateWihFifeShips);
+            }
+            catch
+            {
+                MessageBox.Show("Некорректные данные");
+            }
         }
 
         void WriteData(GetStat getStat)
@@ -88,7 +101,7 @@ namespace WindowsFormsApp1
 
             shipsCount /= (int)itCountFinal;
 
-            ShipTimeTextBox.Text = Math.Round(time, 2).ToString();
+            ShipTimeTextBox.Text = Math.Round(time, 5).ToString();
             shipsTextBox.Text = shipsCount.ToString();
             ITTextBox.Text = itCountFinal.ToString();
             textBox1.Text = Math.Round((KEK.count1 / itCountFinal)).ToString();

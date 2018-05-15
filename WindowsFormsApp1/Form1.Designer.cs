@@ -93,7 +93,7 @@
             // 
             // timeTextBox
             // 
-            this.timeTextBox.Location = new System.Drawing.Point(117, 66);
+            this.timeTextBox.Location = new System.Drawing.Point(163, 66);
             this.timeTextBox.Name = "timeTextBox";
             this.timeTextBox.Size = new System.Drawing.Size(100, 20);
             this.timeTextBox.TabIndex = 4;
@@ -112,9 +112,9 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(12, 69);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(99, 13);
+            this.label3.Size = new System.Drawing.Size(145, 13);
             this.label3.TabIndex = 6;
-            this.label3.Text = "Часы симуляции: ";
+            this.label3.Text = "Интервал моделирования: ";
             // 
             // fiveShipsButton
             // 

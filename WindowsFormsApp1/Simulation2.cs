@@ -41,7 +41,7 @@ namespace WindowsFormsApp1
             var shipQueue = new ShipQueue();
             var storm = new Storm();
             var toWork = new ToWork();
-            var fifeShips = new FifeShips();
+            var fifeShips = new FiveShips();
             var statistic = new Statistic(4);
 
             IQuest[] quests = { shipQueue, storm, toWork, fifeShips };
@@ -209,17 +209,19 @@ namespace WindowsFormsApp1
 
     class ToWork : IQuest
     {
+        const int docks = 3;
+
         private double endTime;
         public double EndTime => endTime;
 
         public ShipQueue shipQueue;
         public Storm storm;
         public Statistic statistic;
-        public FifeShips fifeShips;
+        public FiveShips fifeShips;
 
-        private List<Statistic.Ship> dock = new List<Statistic.Ship>(3);
+        private List<Statistic.Ship> dock = new List<Statistic.Ship>(docks);
 
-        public void Init(ShipQueue shipQueue, Storm storm, Statistic statistic, FifeShips fifeShips)
+        public void Init(ShipQueue shipQueue, Storm storm, Statistic statistic, FiveShips fifeShips)
         {
             this.shipQueue = shipQueue;
             this.storm = storm;
@@ -230,7 +232,7 @@ namespace WindowsFormsApp1
         public bool PushShip(double timeScale)
         {
             if (storm.IsStorm) return false;
-            if (shipQueue.ThisQueue.Count != 0 && dock.Count <= 3)
+            if (shipQueue.ThisQueue.Count != 0 && dock.Count <= docks)
             {
                 var pool = shipQueue.ThisQueue.Dequeue();
                 pool.EndingTime = timeScale + pool.InDockTime;
@@ -276,7 +278,7 @@ namespace WindowsFormsApp1
         public bool TryMake(double timeScale) => PopShip(timeScale);
     }
 
-    class FifeShips : IQuest
+    class FiveShips : IQuest
     {
         const int shipCount = 5;
         double endTime = 0.0;
@@ -285,7 +287,7 @@ namespace WindowsFormsApp1
 
         List<double> nextShipTimes = new List<double>();
 
-        public FifeShips()
+        public FiveShips()
         {
             for (int i = 0; i < shipCount; i++)
                 nextShipTimes.Add(0.0);

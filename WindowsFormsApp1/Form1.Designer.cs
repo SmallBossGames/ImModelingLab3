@@ -61,7 +61,7 @@
             this.mainButton.Location = new System.Drawing.Point(12, 232);
             this.mainButton.Name = "mainButton";
             this.mainButton.Size = new System.Drawing.Size(164, 92);
-            this.mainButton.TabIndex = 0;
+            this.mainButton.TabIndex = 4;
             this.mainButton.Text = "Стандартная симуляция";
             this.mainButton.UseVisualStyleBackColor = true;
             this.mainButton.Click += new System.EventHandler(this.mainButton_Click);
@@ -96,7 +96,7 @@
             this.timeTextBox.Location = new System.Drawing.Point(163, 66);
             this.timeTextBox.Name = "timeTextBox";
             this.timeTextBox.Size = new System.Drawing.Size(100, 20);
-            this.timeTextBox.TabIndex = 4;
+            this.timeTextBox.TabIndex = 0;
             // 
             // label2
             // 
@@ -121,7 +121,7 @@
             this.fiveShipsButton.Location = new System.Drawing.Point(185, 232);
             this.fiveShipsButton.Name = "fiveShipsButton";
             this.fiveShipsButton.Size = new System.Drawing.Size(168, 92);
-            this.fiveShipsButton.TabIndex = 7;
+            this.fiveShipsButton.TabIndex = 5;
             this.fiveShipsButton.Text = "Симуляция с пятью дополнительными кораблями";
             this.fiveShipsButton.UseVisualStyleBackColor = true;
             this.fiveShipsButton.Click += new System.EventHandler(this.fiveShipsButton_Click);
@@ -218,14 +218,14 @@
             this.accuracyTextBox.Location = new System.Drawing.Point(145, 92);
             this.accuracyTextBox.Name = "accuracyTextBox";
             this.accuracyTextBox.Size = new System.Drawing.Size(100, 20);
-            this.accuracyTextBox.TabIndex = 18;
+            this.accuracyTextBox.TabIndex = 1;
             // 
             // kvantilTextBox
             // 
             this.kvantilTextBox.Location = new System.Drawing.Point(76, 117);
             this.kvantilTextBox.Name = "kvantilTextBox";
             this.kvantilTextBox.Size = new System.Drawing.Size(100, 20);
-            this.kvantilTextBox.TabIndex = 19;
+            this.kvantilTextBox.TabIndex = 2;
             // 
             // label10
             // 
@@ -258,7 +258,7 @@
             this.ShipTypeTextBox.Location = new System.Drawing.Point(308, 118);
             this.ShipTypeTextBox.Name = "ShipTypeTextBox";
             this.ShipTypeTextBox.Size = new System.Drawing.Size(100, 20);
-            this.ShipTypeTextBox.TabIndex = 23;
+            this.ShipTypeTextBox.TabIndex = 3;
             // 
             // label12
             // 

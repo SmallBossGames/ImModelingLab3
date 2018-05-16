@@ -26,7 +26,8 @@ namespace WindowsFormsApp1
             try
             {
                 WriteData(simulation2.Simulate);
-            } catch
+            }
+            catch
             {
                 MessageBox.Show("Некорректные данные");
             }
